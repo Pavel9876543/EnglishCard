@@ -172,7 +172,8 @@ async def add_word(message: types.Message, state: FSMContext):
         "INSERT INTO user_words(word_ru, word_en, user_id) VALUES($1, $2, $3);",
         word_ru, word_en, message.from_user.id
     )
-    await message.answer(f"✅ Слово '{word_ru}: {word_en}' добавлено!")
+    count_user_words = await queries_bd("SELECT count(*) FROM user_words;")
+    await message.answer(f"✅ Слово '{word_ru}: {word_en}' добавлено!\nКол-во добавленных слов: {count_user_words[0]['count']}")
     await state.clear()
 
 @dp.message(DeleteWord.waiting_for_word)
